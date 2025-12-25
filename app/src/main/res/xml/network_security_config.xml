@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Network Security Configuration
+    
+    SECURITY FEATURES:
+    1. Disable cleartext traffic (HTTP not allowed)
+    2. Certificate Pinning for production servers
+    3. Custom trust anchors for development
+-->
+<network-security-config>
+    <!-- Global setting: no cleartext traffic -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Production domain configuration with certificate pinning -->
+    <!-- 
+        IMPORTANT: Replace with your actual production domain and certificate pins
+        
+        To generate pins:
+        openssl s_client -servername yourdomain.com -connect yourdomain.com:443 | \
+        openssl x509 -pubkey -noout | \
+        openssl pkey -pubin -outform der | \
+        openssl dgst -sha256 -binary | openssl enc -base64
+    -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">api.yourserver.com</domain>
+        <pin-set expiration="2025-12-31">
+            <!-- Primary certificate pin -->
+            <pin digest="SHA-256">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</pin>
+            <!-- Backup certificate pin -->
+            <pin digest="SHA-256">BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=</pin>
+        </pin-set>
+    </domain-config>
+
+    <!-- Debug-only configuration (remove in production) -->
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="user" />
+            <certificates src="system" />
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>

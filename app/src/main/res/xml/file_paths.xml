@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    FileProvider paths for secure file sharing
+    Uses Scoped Storage approach
+-->
+<paths>
+    <!-- App-specific external files directory -->
+    <external-files-path
+        name="processed_photos"
+        path="PassPhotoProcessed/" />
+    
+    <!-- Cache directory for temporary files -->
+    <cache-path
+        name="temp_cache"
+        path="/" />
+    
+    <!-- Internal files directory -->
+    <files-path
+        name="internal_files"
+        path="/" />
+</paths>
