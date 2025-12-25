@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Network Security Configuration
+    
+    SECURITY FEATURES:
+    1. Disable cleartext traffic (HTTP not allowed)
+    2. Certificate Pinning for production servers
+    3. Custom trust anchors for development
+    
+    IMPORTANT: This configuration contains PLACEHOLDER pins that must be replaced
+    before production deployment. The placeholder pins will BLOCK ALL network
+    connections to the specified domain.
+    
+    See CertificatePinningManager.kt for instructions on generating proper pins.
+-->
+<network-security-config>
+    <!-- Global setting: no cleartext traffic -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- 
+        Production domain configuration with certificate pinning
+        
+        IMPORTANT: Replace the domain and pins below with your actual values!
+        
+        The current placeholder values will BLOCK ALL connections to the domain.
+        
+        To generate pins for your server:
+        1. Run the following command:
+           openssl s_client -servername yourdomain.com -connect yourdomain.com:443 | \
+               openssl x509 -pubkey -noout | \
+               openssl pkey -pubin -outform der | \
+               openssl dgst -sha256 -binary | openssl enc -base64
+        
+        2. Replace "api.yourserver.com" with your actual domain
+        3. Replace the placeholder pins with actual pin values
+        4. Update expiration date appropriately
+        5. Include backup pins for certificate rotation
+    -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">api.yourserver.com</domain>
+        <pin-set expiration="2025-12-31">
+            <!-- PLACEHOLDER - Replace with your primary certificate pin -->
+            <pin digest="SHA-256">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</pin>
+            <!-- PLACEHOLDER - Replace with your backup certificate pin -->
+            <pin digest="SHA-256">BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=</pin>
+        </pin-set>
+    </domain-config>
+
+    <!-- Debug-only configuration (automatically applied only in debug builds) -->
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="user" />
+            <certificates src="system" />
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>
