@@ -331,8 +331,9 @@ class TamperDetection(private val context: Context) {
                Build.PRODUCT.contains("vbox86p") ||
                Build.BOARD.lowercase().contains("nox") ||
                Build.BOOTLOADER.lowercase().contains("nox") ||
-               Build.HARDWARE.lowercase().contains("nox") ||
-               Build.SERIAL.lowercase().contains("nox")
+               Build.HARDWARE.lowercase().contains("nox")
+               // Note: Build.SERIAL is deprecated and requires READ_PRIVILEGED_PHONE_STATE
+               // permission on Android 10+, so we skip checking it
     }
 
     /**
