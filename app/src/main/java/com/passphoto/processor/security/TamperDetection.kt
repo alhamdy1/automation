@@ -30,12 +30,28 @@ import java.security.MessageDigest
 class TamperDetection(private val context: Context) {
 
     companion object {
-        // IMPORTANT: Replace with your actual release signing certificate SHA-256
-        // Get using: keytool -list -v -keystore your-release-key.keystore -alias your-alias
-        // Or: ./gradlew signingReport
+        /**
+         * IMPORTANT: Replace these placeholder values before production release!
+         * 
+         * To get your release signing certificate SHA-256 hash:
+         * 
+         * Method 1 - Using keytool:
+         *   keytool -list -v -keystore your-release-key.keystore -alias your-alias
+         *   Copy the SHA256 fingerprint (remove colons and lowercase)
+         * 
+         * Method 2 - Using Gradle:
+         *   ./gradlew signingReport
+         *   Look for SHA-256 under your release variant
+         * 
+         * Method 3 - Get from APK at runtime (for debugging):
+         *   Log the computed hash during development
+         * 
+         * These placeholder values will cause signature verification to fail until replaced!
+         */
         private const val EXPECTED_SIGNATURE_SHA256 = "YOUR_RELEASE_SIGNING_CERT_SHA256_HASH"
         
-        // Debug signature (for development - remove in production)
+        // Debug signature - REMOVE this in production builds!
+        // Only used during development to allow testing
         private const val DEBUG_SIGNATURE_SHA256 = "DEBUG_SIGNING_CERT_SHA256_HASH"
         
         // Package name validation

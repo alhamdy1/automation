@@ -32,21 +32,38 @@ import javax.net.ssl.X509TrustManager
 class CertificatePinningManager(private val context: Context) {
 
     companion object {
-        // Example pins - REPLACE WITH YOUR ACTUAL SERVER CERTIFICATE PINS
-        // Generate using: openssl s_client -servername yourdomain.com -connect yourdomain.com:443 | \
-        //                 openssl x509 -pubkey -noout | \
-        //                 openssl pkey -pubin -outform der | \
-        //                 openssl dgst -sha256 -binary | openssl enc -base64
-        
+        /**
+         * IMPORTANT: Replace these placeholder values before production release!
+         * 
+         * These are example/placeholder pins that will BLOCK ALL network connections!
+         * 
+         * To generate certificate pins for your server:
+         * 
+         * Step 1 - Get the public key hash:
+         *   openssl s_client -servername yourdomain.com -connect yourdomain.com:443 | \
+         *       openssl x509 -pubkey -noout | \
+         *       openssl pkey -pubin -outform der | \
+         *       openssl dgst -sha256 -binary | openssl enc -base64
+         * 
+         * Step 2 - Format as pin:
+         *   Prefix the output with "sha256/" 
+         *   Example: sha256/AbCdEfGhIjKlMnOpQrStUvWxYz123456789012345678=
+         * 
+         * Best Practices:
+         * - Always include multiple pins (leaf cert + backup)
+         * - Include intermediate CA pin for certificate rotation
+         * - Set reasonable expiration and plan for pin updates
+         * - Test thoroughly before production deployment
+         */
         private const val PRIMARY_DOMAIN = "api.yourserver.com"
         
-        // Primary leaf certificate pin
+        // Primary leaf certificate pin - REPLACE WITH YOUR ACTUAL PIN
         private const val PRIMARY_PIN = "sha256/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
         
-        // Backup pin (next certificate or intermediate CA)
+        // Backup pin (next certificate or intermediate CA) - REPLACE WITH YOUR ACTUAL PIN
         private const val BACKUP_PIN_1 = "sha256/BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB="
         
-        // Root CA pin (for defense in depth)
+        // Root CA pin (for defense in depth) - REPLACE WITH YOUR ACTUAL PIN
         private const val BACKUP_PIN_2 = "sha256/CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC="
         
         // Connection timeouts (anti-DoS)

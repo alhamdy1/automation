@@ -447,14 +447,66 @@ class BatchPhotoProcessingWorker(
 /**
  * Periodic scan worker (backup, runs infrequently)
  */
+/**
+ * Periodic scan worker (backup, runs infrequently)
+ * Reuses the same logic as BatchPhotoProcessingWorker
+ */
 class PeriodicScanWorker(
     context: Context,
     params: WorkerParameters
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
-        // Delegate to batch processing
-        val batchWorker = BatchPhotoProcessingWorker(applicationContext, WorkerParameters::class.java.newInstance() as WorkerParameters)
-        return batchWorker.doWork()
+        val logger = EncryptedLogger(applicationContext)
+        val monitorManager = PhotoMonitorManager(applicationContext)
+        val passPhotoDetector = PassPhotoDetector(applicationContext, logger)
+        val vendorProcessor = VendorAIProcessor(applicationContext, logger)
+        
+        return try {
+            // Get last processed timestamp from preferences
+            val prefs = applicationContext.getSharedPreferences("photo_monitor", Context.MODE_PRIVATE)
+            val lastTimestamp = prefs.getLong("last_processed", 0L)
+            
+            // Query new photos
+            val newPhotos = monitorManager.queryNewPhotosSince(lastTimestamp)
+            
+            var processedCount = 0
+            var skippedCount = 0
+            
+            for (photoUri in newPhotos) {
+                val analysisResult = passPhotoDetector.analyzePhoto(photoUri)
+                
+                if (analysisResult.isPassPhoto) {
+                    vendorProcessor.processPassPhoto(photoUri)
+                    processedCount++
+                } else {
+                    skippedCount++
+                }
+            }
+            
+            // Update timestamp
+            prefs.edit().putLong("last_processed", System.currentTimeMillis() / 1000).apply()
+            
+            logger.log(
+                action = "PERIODIC_SCAN_COMPLETE",
+                status = LogStatus.SUCCESS,
+                metadata = mapOf(
+                    "totalPhotos" to newPhotos.size,
+                    "processed" to processedCount,
+                    "skipped" to skippedCount
+                )
+            )
+            
+            Result.success()
+        } catch (e: Exception) {
+            logger.log(
+                action = "PERIODIC_SCAN_ERROR",
+                status = LogStatus.FAILURE,
+                metadata = mapOf("error" to (e.message ?: "Unknown"))
+            )
+            Result.retry()
+        } finally {
+            passPhotoDetector.close()
+        }
     }
 }

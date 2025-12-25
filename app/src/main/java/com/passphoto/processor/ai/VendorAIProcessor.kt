@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -407,7 +408,7 @@ class VendorAIProcessor(
         }
         
         // Make visible in gallery by scanning
-        MediaStore.scanFile(context, outputFile)
+        scanFileToGallery(context, outputFile)
         
         return outputFile
     }
@@ -436,12 +437,15 @@ class VendorAIProcessor(
 }
 
 /**
- * MediaStore extension to scan file
+ * Scan file to make it visible in gallery
  */
-private fun MediaStore.scanFile(context: Context, file: File) {
-    val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
-    intent.data = Uri.fromFile(file)
-    context.sendBroadcast(intent)
+private fun scanFileToGallery(context: Context, file: File) {
+    MediaScannerConnection.scanFile(
+        context,
+        arrayOf(file.absolutePath),
+        arrayOf("image/jpeg"),
+        null
+    )
 }
 
 /**
