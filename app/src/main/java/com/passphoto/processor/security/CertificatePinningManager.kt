@@ -10,7 +10,6 @@ import java.security.KeyStore
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
-import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
 

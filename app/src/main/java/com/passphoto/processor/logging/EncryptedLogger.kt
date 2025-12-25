@@ -6,7 +6,6 @@ import android.security.keystore.KeyProperties
 import android.util.Base64
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import java.io.File
 import java.security.KeyStore
 import java.text.SimpleDateFormat
