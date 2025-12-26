@@ -6,6 +6,19 @@ Aplikasi Android untuk memproses foto paspor secara otomatis dengan keamanan tin
 
 ---
 
+## 📚 Documentation / Dokumentasi
+
+**🇮🇩 Bahasa Indonesia:**
+- **[PANDUAN_LENGKAP.md](PANDUAN_LENGKAP.md)** - Panduan lengkap setup dan penggunaan
+- **[QUICK_START_ID.md](QUICK_START_ID.md)** - Panduan cepat memulai (5 menit)
+- **[FLOWCHART_ID.md](FLOWCHART_ID.md)** - Diagram alur sistem lengkap
+- **[SUMMARY_ID.md](SUMMARY_ID.md)** - Ringkasan dokumentasi
+
+**🇬🇧 English:**
+- This README provides technical documentation
+
+---
+
 ## 📋 Table of Contents
 
 1. [Security Architecture](#security-architecture)
